@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>gebTest</groupId>
+    <artifactId>gebShowcase</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <gebVersion>0.13.1</gebVersion>
+        <seleniumVersion>2.51.0</seleniumVersion>
+        <groovyVersion>2.4.6</groovyVersion>
+        <surefireVersion>2.19.1</surefireVersion>
+        <gmavenplusVersion>1.5</gmavenplusVersion>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- Groovy -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovyVersion}</version>
+        </dependency>
+        <!-- /Groovy -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Spock-->
+        <dependency>
+            <groupId>org.spockframework</groupId>
+            <artifactId>spock-core</artifactId>
+            <version>1.0-groovy-2.4</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.groovy</groupId>
+                    <artifactId>groovy-all</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- /Spock-->
+        <!-- Geb-->
+        <dependency>
+            <groupId>org.gebish</groupId>
+            <artifactId>geb-spock</artifactId>
+            <version>${gebVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- /Geb-->
+        <!-- Selenium-->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <version>${seleniumVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-firefox-driver</artifactId>
+            <version>${seleniumVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-chrome-driver</artifactId>
+            <version>${seleniumVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-edge-driver</artifactId>
+            <version>${seleniumVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-ie-driver</artifactId>
+            <version>${seleniumVersion}</version>
+        </dependency>
+        <!-- /Selenium-->
+        <!-- WebDriverManager-->
+        <!--
+            Helpers for management of Selenium drivers
+         -->
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>1.4.2</version>
+        </dependency>
+        <!-- /WebDriverManager-->
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Surefire plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefireVersion}</version>
+                <configuration>
+                    <includes>
+                        <!-- IMPORTANT-->
+                        <!--
+                            Surefire will pick up Spock test automatically
+                            only if test classes match Surefire's naming
+                            conventions. To add additional test classes
+                            we must specify class name patterns.
+                        -->
+                        <!-- /IMPORTANT-->
+                        <include>*Spec*</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <geb.build.reportsDir>target/test-reports/geb</geb.build.reportsDir>
+                    </systemPropertyVariables>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+            <!-- /Surefire plugin-->
+            <!-- Maven wrapper-->
+            <!--
+                Added for portability of this project.
+             -->
+            <plugin>
+                <groupId>com.rimerosolutions.maven.plugins</groupId>
+                <artifactId>wrapper-maven-plugin</artifactId>
+                <version>0.0.4</version>
+                <configuration>
+                    <mavenVersion>3.3.3</mavenVersion>
+                </configuration>
+            </plugin>
+            <!-- /Maven wrapper-->
+            <!-- Gmaven-->
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>${gmavenplusVersion}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>${groovyVersion}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!-- /Gmaven-->
+            <plugin>
+                <groupId>ch.fortysix</groupId>
+                <artifactId>maven-postman-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>send a mail</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>send-mail</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                    </execution>
+                </executions>
+                    <configuration>
+                        <from>geb.test.report@gmail.com</from>
+                        <subject>Test report</subject>
+                        <failonerror>true</failonerror>
+                        <mailhost>smtp.gmail.com</mailhost>
+                        <mailport>465</mailport>
+                        <mailssl>true</mailssl>
+                        <mailAltConfig>true</mailAltConfig>
+                        <mailuser>geb.test.report@gmail.com</mailuser>
+                        <mailpassword>gebPass1234</mailpassword>
+                        <htmlMessageFile>target/site/surefire-report.html</htmlMessageFile>
+                        <receivers>
+                            <receiver>vlazar.mis@gmail.com</receiver>
+                        </receivers>
+                        <!--<htmlMessage>
+                            <![CDATA[
+                                <p>This is a report,testing</p>
+                            <br>
+                              <p>testing.</p>
+                                ]]>
+                        </htmlMessage>-->
+                        <!--<fileSets>
+                            <fileSet>
+                                <directory>target/site</directory>
+                                <includes>
+                                    <include>*.css</include>
+                                </includes>
+                            </fileSet>
+                            <fileSet>
+                                <directory>target/site/css</directory>
+                                <includes>
+                                    <include>*.css</include>
+                                </includes>
+                            </fileSet>
+                            <fileSet>
+                                <directory>target/site/images</directory>
+                                <includes>
+                                    <include>*.*</include>
+                                </includes>
+                            </fileSet>
+                            <fileSet>
+                                <directory>target/site/images/logos</directory>
+                                <includes>
+                                    <include>*.*</include>
+                                </includes>
+                            </fileSet>
+                        </fileSets>-->
+                    </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
