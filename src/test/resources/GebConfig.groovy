@@ -18,7 +18,7 @@ import org.openqa.selenium.remote.DesiredCapabilities
 baseUrl = 'http://localhost:4503'
 
 waiting{
-    timeout = 2
+    timeout = 5
 }
 
 environments{

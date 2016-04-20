@@ -8,7 +8,7 @@ class SearchResultsPage extends Page{
     }
 
     static content = {
-        baffinSnowLink(required: false){
+        baffinSnowLink(required: false) {
             $("a", href: '/content/geometrixx-outdoors/en/equipment/skiing/baffin-snow.html')
         }
     }
