@@ -1,15 +1,10 @@
-# Geb Showcase
+# GEB automated UI tests for Adobe Experience Manager(CQ)
 ### Description
-
-todo
+GEB automated UI tests for Adobe Experience Manager(CQ). Mobile site emulation included.
 
 ### Usage
-`Prerequisites:`  AEM in publish mode on port 4503
+`Prerequisites:`  AEM Publish instance with Geometrixx Outdoors demo project 
 
-`Configuration:` For email report change or add new receiver in Maven pom file
+`Configuration:` For email report add your email in Maven pom file
 
 `Run tests:` Run test.sh script
-
-
-
-
